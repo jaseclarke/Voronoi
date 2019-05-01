@@ -47,8 +47,8 @@ namespace RegionVoronoi
             foreach (var site in _siteList)
             {
                 if (Math.Abs(primary.X - site.X) < 1 && primary.Y - site.Y < 1) continue;
-                if (Math.Abs(primary.X - site.X) < 1) continue;
-                if (Math.Abs(primary.Y - site.Y) < 1) continue;
+                //if (Math.Abs(primary.X - site.X) < 1) continue;
+                //if (Math.Abs(primary.Y - site.Y) < 1) continue;
 
                 var region = NearestRegion(c, primary, site);
                 if (currentList == null)
@@ -83,19 +83,23 @@ namespace RegionVoronoi
         private List<IntPoint> NearestRegion(Clipper c, PointF primary, PointF secondary)
         {
             PointF midPoint = new PointF((primary.X + secondary.X) / 2, (primary.Y + secondary.Y) / 2);
-            float bisectorGradient = -1 * (primary.X - secondary.X) / (primary.Y - secondary.Y);
 
-            float intercept = midPoint.Y - bisectorGradient * midPoint.X;
+
+            bool verticalBisector = Math.Abs(primary.Y - secondary.Y) < 0.1;
+
+            float bisectorGradient =  verticalBisector?0:-1 * (primary.X - secondary.X) / (primary.Y - secondary.Y);
+
+            float intercept = verticalBisector?midPoint.Y:midPoint.Y - bisectorGradient * midPoint.X;
 
             float xmin = _boundingBox.X;
             float ymin = _boundingBox.Y;
             float xmax = _boundingBox.X + _boundingBox.Width;
             float ymax = _boundingBox.Y + _boundingBox.Height;
 
-            float yatxmin = bisectorGradient * xmin + intercept;
-            float yatxmax = bisectorGradient * xmax + intercept;
-            float xatymin = (ymin - intercept) / bisectorGradient;
-            float xatymax = (ymax - intercept) / bisectorGradient;
+            float yatxmin = verticalBisector ? -1 : bisectorGradient * xmin + intercept;
+            float yatxmax = verticalBisector ? -1 : bisectorGradient * xmax + intercept;
+            float xatymin = verticalBisector ? midPoint.X : (ymin - intercept) / bisectorGradient;
+            float xatymax = verticalBisector ? midPoint.X : (ymax - intercept) / bisectorGradient;
 
             PointF ptAtXMin = new PointF(xmin, yatxmin);
             PointF ptAtXMax = new PointF(xmax, yatxmax);
