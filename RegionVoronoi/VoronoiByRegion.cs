@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ClipperLib;
 
 namespace RegionVoronoi
 {
     public class VoronoiByRegion
     {
-        private Rectangle _boundingBox;
-        private readonly List<PointF> _siteList = new List<PointF>();
+        private readonly Rectangle _boundingBox;
+
         private readonly Random _rnd = new Random();
 
-        public List<Tuple<PointF,List<PointF>>> Points { get; } = new List<Tuple<PointF, List<PointF>>>();
+        public List<Site> Sites { get; private set; } = new List<Site>();
 
         public VoronoiByRegion(Rectangle boundingBox, int numSites)
         {
@@ -24,19 +22,23 @@ namespace RegionVoronoi
             {
                 CreateSite();
             }
+            Calculate();
+        }
 
-            foreach (var site in _siteList)
+        public void Calculate()
+        {
+            foreach (var site in Sites)
             {
-                AddRegion(new Point((int) site.X, (int) site.Y), CreateVoronoiRegion(site));
+                AddRegion(site, CreateVoronoiRegion(site));
             }
         }
 
-        private void AddRegion(Point primary, List<IntPoint> points)
+        private void AddRegion(Site primary, List<IntPoint> points)
         {
-            Points.Add(new Tuple<PointF, List<PointF>>(primary, points.Select(p => new PointF((float) p.X,(float) p.Y)).ToList()));
+            primary.RegionPoints = points.Select(p => new PointF(p.X, p.Y)).ToList();
         }
 
-        private List<IntPoint> CreateVoronoiRegion(PointF primary)
+        private List<IntPoint> CreateVoronoiRegion(Site primary)
         {
             Clipper c = new Clipper();
 
@@ -44,13 +46,11 @@ namespace RegionVoronoi
 
             List<IntPoint> currentList = null;
 
-            foreach (var site in _siteList)
+            foreach (var site in Sites)
             {
-                if (Math.Abs(primary.X - site.X) < 1 && primary.Y - site.Y < 1) continue;
-                //if (Math.Abs(primary.X - site.X) < 1) continue;
-                //if (Math.Abs(primary.Y - site.Y) < 1) continue;
+                if (primary.Equals(site)) continue;
 
-                var region = NearestRegion(c, primary, site);
+                var region = NearestRegion(primary, site);
                 if (currentList == null)
                 {
                     currentList = region;
@@ -73,21 +73,26 @@ namespace RegionVoronoi
         {
             int x = _boundingBox.X + _rnd.Next(_boundingBox.Width);
             int y = _boundingBox.Y + _rnd.Next(_boundingBox.Height);
-            _siteList.Add(new PointF((float)x, (float)y));
+            Sites.Add(new Site { Position = new PointF(x,y) });
         }
 
-        private void Test()
+        private double Distance(PointF p1, PointF p2)
         {
+            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
+        }
+        public Site NearestSite(Point p)
+        {
+            var nearest = Sites.OrderBy(s => Distance(s.Position, new PointF(p.X, p.Y))).First();
+            return nearest;
         }
 
-        private List<IntPoint> NearestRegion(Clipper c, PointF primary, PointF secondary)
+        private List<IntPoint> NearestRegion(Site primary, Site secondary)
         {
-            PointF midPoint = new PointF((primary.X + secondary.X) / 2, (primary.Y + secondary.Y) / 2);
+            PointF midPoint = new PointF((primary.Position.X + secondary.Position.X) / 2, (primary.Position.Y + secondary.Position.Y) / 2);
 
+            bool verticalBisector = Math.Abs(primary.Position.Y - secondary.Position.Y) < 0.1;
 
-            bool verticalBisector = Math.Abs(primary.Y - secondary.Y) < 0.1;
-
-            float bisectorGradient =  verticalBisector?0:-1 * (primary.X - secondary.X) / (primary.Y - secondary.Y);
+            float bisectorGradient =  verticalBisector?0:-1 * (primary.Position.X - secondary.Position.X) / (primary.Position.Y - secondary.Position.Y);
 
             float intercept = verticalBisector?midPoint.Y:midPoint.Y - bisectorGradient * midPoint.X;
 
@@ -125,7 +130,7 @@ namespace RegionVoronoi
                 points.Add(ptAtYMax);
             }
 
-            bool left = isLeft(points[0], points[1], primary);
+            bool left = IsLeft(points[0], points[1], primary.Position);
 
             var rectanglePoints = new List<PointF>
             {
@@ -136,19 +141,17 @@ namespace RegionVoronoi
             };
 
 
-            rectanglePoints.RemoveAll(p => isLeft(points[0], points[1], p) != left);
+            rectanglePoints.RemoveAll(p => IsLeft(points[0], points[1], p) != left);
 
             points.AddRange(rectanglePoints);
 
-            points = points.OrderBy(p => Math.Atan2(primary.Y - p.Y, primary.X - p.X)).ToList();
+            points = points.OrderBy(p => Math.Atan2(primary.Position.Y - p.Y, primary.Position.X - p.X)).ToList();
             points.Add(points[0]);
 
             return points.Select(p => new IntPoint((int)p.X, (int)p.Y)).ToList();
-
-            //Console.WriteLine($"n={points.Count};p1={points[0]},p2={points[1]}, left={left}");
         }
 
-        public bool isLeft(PointF a, PointF b, PointF c)
+        public bool IsLeft(PointF a, PointF b, PointF c)
         {
             return ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X)) > 0;
         }

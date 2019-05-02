@@ -15,7 +15,6 @@ namespace SimpleVoronoi
         [STAThread]
         static void Main()
         {
-            //VoronoiByRegion s = new VoronoiByRegion(new Rectangle(0,0,10,10));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
