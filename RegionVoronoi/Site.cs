@@ -8,7 +8,7 @@ namespace RegionVoronoi
     {
         public PointF Position { get; set; }
         public Color Color { get; set; }
-        public List<PointF> RegionPoints { get; set; }
+        public List<Point> RegionPoints { get; set; }
 
         public override string ToString()
         {

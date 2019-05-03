@@ -66,7 +66,7 @@ namespace RegionVoronoi
 
         private void AddRegion(Site primary, List<IntPoint> points)
         {
-            primary.RegionPoints = points.Select(p => new PointF(p.X, p.Y)).ToList();
+            primary.RegionPoints = points.Select(p => new Point((int) p.X, (int) p.Y)).ToList();
         }
 
         public List<Site> HaveCommonEdges(Site s)
