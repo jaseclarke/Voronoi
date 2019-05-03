@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using RandomColorGenerator;
 using RegionVoronoi;
@@ -24,15 +27,59 @@ namespace SimpleVoronoi
             CreateNewDiagram();
         }
 
-        private void AssignRandomColors(VoronoiByRegion voronoi)
+        private void AssignColors()
         {
-            var colors = RandomColor.GetColors(ColorScheme.Random, fillCB.Checked ? Luminosity.Light : Luminosity.Dark,
-                voronoi.Sites.Count);
-            for (int i = 0; i < voronoi.Sites.Count; ++i)
+            if (randomColCB.Checked)
             {
-                voronoi.Sites[i].Color = colors[i];
+                AssignRandomColors();
+            }
+            else
+            {
+                AssignMinimumColors();
             }
         }
+
+        private void AssignRandomColors()
+        {
+            var colors = RandomColor.GetColors(ColorScheme.Random, fillCB.Checked ? Luminosity.Light : Luminosity.Dark,
+                _voronoi.Sites.Count);
+            for (int i = 0; i < _voronoi.Sites.Count; ++i)
+            {
+                _voronoi.Sites[i].Color = colors[i];
+            }
+        }
+
+        private void DumpSites()
+        {
+            using (var sw = new StreamWriter(@"c:\temp\sites.txt"))
+            {
+                foreach (var site in _voronoi.Sites)
+                {
+                    sw.Write($"({site.Position.X},{site.Position.Y}) : ");
+                    foreach (var point in site.RegionPoints)
+                    {
+                        sw.Write($"({point.X},{point.Y}) ");
+                    }
+                    sw.WriteLine();
+                }
+            }
+        }
+        private void AssignMinimumColors()
+        {
+            var colors = RandomColor.GetColors(ColorScheme.Random, fillCB.Checked ? Luminosity.Light : Luminosity.Dark,
+                _voronoi.Sites.Count);
+            _voronoi.Sites.ForEach(s => s.Color = Color.Green);
+            DumpSites();
+            foreach (var site in _voronoi.Sites)
+            {
+                var sitesWithCommonEdges = _voronoi.HaveCommonEdges(site);
+                var colorsUsedInCommonSites = sitesWithCommonEdges.Where(s => s.Color != Color.Green).Select(s => s.Color).Distinct();
+                var nextColor = colors.First(c => !colorsUsedInCommonSites.Contains(c));
+
+                site.Color = nextColor;
+            }
+        }
+
         private void AssignRandomColor(Site s)
         {
             s.Color = RandomColor.GetColor(ColorScheme.Random, fillCB.Checked ? Luminosity.Light : Luminosity.Dark);
@@ -42,7 +89,7 @@ namespace SimpleVoronoi
         {
             CreateDrawingArea();
             _voronoi = new VoronoiByRegion(pictureBox1.Bounds, (int) numberOfPoints.Value);
-            AssignRandomColors(_voronoi);
+            AssignColors(); 
             DrawPicture(_voronoi);
         }
 
@@ -99,7 +146,7 @@ namespace SimpleVoronoi
 
         private void ReColourBtn_Click(object sender, EventArgs e)
         {
-            AssignRandomColors(_voronoi);
+            AssignColors();
             DrawPicture(_voronoi);
         }
 
@@ -137,6 +184,12 @@ namespace SimpleVoronoi
             if (addEdit.Checked)
             {
                 AddSite(e.Location);
+            }
+
+            if (noneEdit.Checked)
+            {
+                Site s = _voronoi.NearestSite(e.Location);
+                var connectedSites = _voronoi.HaveCommonEdges(s);
             }
         }
     }

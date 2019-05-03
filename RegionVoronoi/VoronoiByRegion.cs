@@ -12,7 +12,7 @@ namespace RegionVoronoi
 
         private readonly Random _rnd = new Random();
 
-        public List<Site> Sites { get; private set; } = new List<Site>();
+        public List<Site> Sites { get; } = new List<Site>();
 
         public VoronoiByRegion(Rectangle boundingBox, int numSites)
         {
@@ -31,11 +31,61 @@ namespace RegionVoronoi
             {
                 AddRegion(site, CreateVoronoiRegion(site));
             }
+
+            ConsolidateNearbyPoints();
+        }
+
+        private void ConsolidateNearbyPoints()
+        {
+            var allPoints = Sites.SelectMany(s => s.RegionPoints).Distinct().ToList();
+
+            foreach (var point in allPoints)
+            {
+                var nearbyPoints = allPoints.Where(p => Distance(p, point) < 5).ToList();
+
+                if (nearbyPoints.Count > 1)
+                {
+                    foreach (var nearbyPoint in nearbyPoints)
+                    {
+                        if (nearbyPoint == point) continue;
+
+                        foreach (var site in Sites)
+                        {
+                            for (int i = 0; i < site.RegionPoints.Count; ++i)
+                            {
+                                if (site.RegionPoints[i] == nearbyPoint)
+                                {
+                                    site.RegionPoints[i] = point;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void AddRegion(Site primary, List<IntPoint> points)
         {
             primary.RegionPoints = points.Select(p => new PointF(p.X, p.Y)).ToList();
+        }
+
+        public List<Site> HaveCommonEdges(Site s)
+        {
+            var sitesWithCommonEdges = new List<Site>();
+            foreach (var otherSite in Sites)
+            {
+                if (otherSite.Equals(s)) continue;
+                foreach (var point in s.RegionPoints)
+                {
+                    if (otherSite.RegionPoints.Contains(point))
+                    {
+                        sitesWithCommonEdges.Add(otherSite);
+                        break;
+                    }
+                }
+            }
+
+            return sitesWithCommonEdges;
         }
 
         private List<IntPoint> CreateVoronoiRegion(Site primary)

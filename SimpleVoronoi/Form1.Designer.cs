@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.deleteEdit = new System.Windows.Forms.RadioButton();
+            this.addEdit = new System.Windows.Forms.RadioButton();
+            this.noneEdit = new System.Windows.Forms.RadioButton();
+            this.reColourBtn = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
             this.showPoints = new System.Windows.Forms.CheckBox();
             this.showOutlines = new System.Windows.Forms.CheckBox();
@@ -36,18 +41,17 @@
             this.numberOfPoints = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.reColourBtn = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.noneEdit = new System.Windows.Forms.RadioButton();
-            this.addEdit = new System.Windows.Forms.RadioButton();
-            this.deleteEdit = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.minimumColRB = new System.Windows.Forms.RadioButton();
+            this.randomColCB = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfPoints)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -58,6 +62,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel1.Controls.Add(this.reColourBtn);
             this.splitContainer1.Panel1.Controls.Add(this.saveButton);
@@ -70,9 +75,65 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.pictureBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
-            this.splitContainer1.SplitterDistance = 266;
+            this.splitContainer1.Size = new System.Drawing.Size(800, 520);
+            this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.deleteEdit);
+            this.groupBox1.Controls.Add(this.addEdit);
+            this.groupBox1.Controls.Add(this.noneEdit);
+            this.groupBox1.Location = new System.Drawing.Point(32, 270);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(120, 90);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Edit Points";
+            // 
+            // deleteEdit
+            // 
+            this.deleteEdit.AutoSize = true;
+            this.deleteEdit.Location = new System.Drawing.Point(6, 65);
+            this.deleteEdit.Name = "deleteEdit";
+            this.deleteEdit.Size = new System.Drawing.Size(88, 17);
+            this.deleteEdit.TabIndex = 2;
+            this.deleteEdit.TabStop = true;
+            this.deleteEdit.Text = "Delete Points";
+            this.deleteEdit.UseVisualStyleBackColor = true;
+            // 
+            // addEdit
+            // 
+            this.addEdit.AutoSize = true;
+            this.addEdit.Location = new System.Drawing.Point(6, 42);
+            this.addEdit.Name = "addEdit";
+            this.addEdit.Size = new System.Drawing.Size(76, 17);
+            this.addEdit.TabIndex = 1;
+            this.addEdit.TabStop = true;
+            this.addEdit.Text = "Add Points";
+            this.addEdit.UseVisualStyleBackColor = true;
+            // 
+            // noneEdit
+            // 
+            this.noneEdit.AutoSize = true;
+            this.noneEdit.Checked = true;
+            this.noneEdit.Location = new System.Drawing.Point(6, 19);
+            this.noneEdit.Name = "noneEdit";
+            this.noneEdit.Size = new System.Drawing.Size(51, 17);
+            this.noneEdit.TabIndex = 0;
+            this.noneEdit.TabStop = true;
+            this.noneEdit.Text = "None";
+            this.noneEdit.UseVisualStyleBackColor = true;
+            // 
+            // reColourBtn
+            // 
+            this.reColourBtn.Location = new System.Drawing.Point(32, 223);
+            this.reColourBtn.Name = "reColourBtn";
+            this.reColourBtn.Size = new System.Drawing.Size(94, 23);
+            this.reColourBtn.TabIndex = 6;
+            this.reColourBtn.Text = "New Colours";
+            this.reColourBtn.UseVisualStyleBackColor = true;
+            this.reColourBtn.Click += new System.EventHandler(this.ReColourBtn_Click);
             // 
             // saveButton
             // 
@@ -146,73 +207,51 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(530, 450);
+            this.pictureBox1.Size = new System.Drawing.Size(596, 520);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseClick);
             // 
-            // reColourBtn
+            // groupBox2
             // 
-            this.reColourBtn.Location = new System.Drawing.Point(32, 223);
-            this.reColourBtn.Name = "reColourBtn";
-            this.reColourBtn.Size = new System.Drawing.Size(94, 23);
-            this.reColourBtn.TabIndex = 6;
-            this.reColourBtn.Text = "New Colours";
-            this.reColourBtn.UseVisualStyleBackColor = true;
-            this.reColourBtn.Click += new System.EventHandler(this.ReColourBtn_Click);
+            this.groupBox2.Controls.Add(this.minimumColRB);
+            this.groupBox2.Controls.Add(this.randomColCB);
+            this.groupBox2.Location = new System.Drawing.Point(32, 366);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(120, 70);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Colours";
             // 
-            // groupBox1
+            // minimumColRB
             // 
-            this.groupBox1.Controls.Add(this.deleteEdit);
-            this.groupBox1.Controls.Add(this.addEdit);
-            this.groupBox1.Controls.Add(this.noneEdit);
-            this.groupBox1.Location = new System.Drawing.Point(32, 270);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(120, 90);
-            this.groupBox1.TabIndex = 7;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Edit Points";
+            this.minimumColRB.AutoSize = true;
+            this.minimumColRB.Location = new System.Drawing.Point(6, 42);
+            this.minimumColRB.Name = "minimumColRB";
+            this.minimumColRB.Size = new System.Drawing.Size(66, 17);
+            this.minimumColRB.TabIndex = 1;
+            this.minimumColRB.TabStop = true;
+            this.minimumColRB.Text = "Minimum";
+            this.minimumColRB.UseVisualStyleBackColor = true;
             // 
-            // noneEdit
+            // randomColCB
             // 
-            this.noneEdit.AutoSize = true;
-            this.noneEdit.Checked = true;
-            this.noneEdit.Location = new System.Drawing.Point(6, 19);
-            this.noneEdit.Name = "noneEdit";
-            this.noneEdit.Size = new System.Drawing.Size(51, 17);
-            this.noneEdit.TabIndex = 0;
-            this.noneEdit.TabStop = true;
-            this.noneEdit.Text = "None";
-            this.noneEdit.UseVisualStyleBackColor = true;
-            // 
-            // addEdit
-            // 
-            this.addEdit.AutoSize = true;
-            this.addEdit.Location = new System.Drawing.Point(6, 42);
-            this.addEdit.Name = "addEdit";
-            this.addEdit.Size = new System.Drawing.Size(76, 17);
-            this.addEdit.TabIndex = 1;
-            this.addEdit.TabStop = true;
-            this.addEdit.Text = "Add Points";
-            this.addEdit.UseVisualStyleBackColor = true;
-            // 
-            // deleteEdit
-            // 
-            this.deleteEdit.AutoSize = true;
-            this.deleteEdit.Location = new System.Drawing.Point(6, 65);
-            this.deleteEdit.Name = "deleteEdit";
-            this.deleteEdit.Size = new System.Drawing.Size(88, 17);
-            this.deleteEdit.TabIndex = 2;
-            this.deleteEdit.TabStop = true;
-            this.deleteEdit.Text = "Delete Points";
-            this.deleteEdit.UseVisualStyleBackColor = true;
+            this.randomColCB.AutoSize = true;
+            this.randomColCB.Checked = true;
+            this.randomColCB.Location = new System.Drawing.Point(6, 19);
+            this.randomColCB.Name = "randomColCB";
+            this.randomColCB.Size = new System.Drawing.Size(65, 17);
+            this.randomColCB.TabIndex = 0;
+            this.randomColCB.TabStop = true;
+            this.randomColCB.Text = "Random";
+            this.randomColCB.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 520);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -221,10 +260,12 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numberOfPoints)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numberOfPoints)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -244,6 +285,9 @@
         private System.Windows.Forms.RadioButton deleteEdit;
         private System.Windows.Forms.RadioButton addEdit;
         private System.Windows.Forms.RadioButton noneEdit;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton minimumColRB;
+        private System.Windows.Forms.RadioButton randomColCB;
     }
 }
 
