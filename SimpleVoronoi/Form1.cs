@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -99,27 +100,7 @@ namespace SimpleVoronoi
             g.InterpolationMode = InterpolationMode.High;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            foreach (var site in rg.Sites)
-            {
-                if (fillCB.Checked)
-                {
-                    g.FillPolygon(new SolidBrush(site.Color), site.RegionPoints.ToArray());
-
-                    if (showOutlines.Checked)
-                    {
-                        g.DrawPolygon(Pens.Black, site.RegionPoints.ToArray());
-                    }
-                }
-                else
-                {
-                    g.DrawPolygon(new Pen(site.Color), site.RegionPoints.ToArray());
-                }
-
-                if (showPoints.Checked)
-                {
-                    g.FillRectangle(Brushes.Blue, (float) (site.Position.X - 2.5), (float) (site.Position.Y - 2.5), 5, 5);
-                }
-            }
+            rg.DrawPicture(g, fillCB.Checked, showOutlines.Checked, showPoints.Checked,_drawingArea.Width,_drawingArea.Height);
 
             pictureBox1.Image = _drawingArea;
             pictureBox1.Refresh();
@@ -139,7 +120,7 @@ namespace SimpleVoronoi
         {
             SaveFileDialog sfd = new SaveFileDialog {Filter = @"JPG Image|*.jpg"};
             if (sfd.ShowDialog(this) == DialogResult.OK)
-            {
+            { 
                 pictureBox1.Image.Save(sfd.FileName,ImageFormat.Jpeg);
             }
         }
@@ -190,6 +171,24 @@ namespace SimpleVoronoi
             {
                 Site s = _voronoi.NearestSite(e.Location);
                 var connectedSites = _voronoi.HaveCommonEdges(s);
+            }
+        }
+
+        private void ExportWordBtn_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog { Filter = @"Word Document|*.rtf", OverwritePrompt = true};
+            if (sfd.ShowDialog(this) == DialogResult.OK)
+            {
+                try
+                {
+                    _voronoi.ImageOffset = (int) outlineOffset.Value;
+                    _voronoi.CreateDocument(sfd.FileName);
+                    Process.Start(sfd.FileName);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($@"Unable to Create Document.{Environment.NewLine}Reason: {exception.Message}");
+                }
             }
         }
     }

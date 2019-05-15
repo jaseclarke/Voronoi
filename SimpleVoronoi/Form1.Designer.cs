@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.minimumColRB = new System.Windows.Forms.RadioButton();
+            this.randomColCB = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.deleteEdit = new System.Windows.Forms.RadioButton();
             this.addEdit = new System.Windows.Forms.RadioButton();
@@ -41,17 +44,18 @@
             this.numberOfPoints = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.minimumColRB = new System.Windows.Forms.RadioButton();
-            this.randomColCB = new System.Windows.Forms.RadioButton();
+            this.exportWordBtn = new System.Windows.Forms.Button();
+            this.outlineOffset = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfPoints)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.outlineOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -62,6 +66,9 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.outlineOffset);
+            this.splitContainer1.Panel1.Controls.Add(this.exportWordBtn);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel1.Controls.Add(this.reColourBtn);
@@ -79,12 +86,46 @@
             this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 0;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.minimumColRB);
+            this.groupBox2.Controls.Add(this.randomColCB);
+            this.groupBox2.Location = new System.Drawing.Point(32, 438);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(120, 70);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Colours";
+            // 
+            // minimumColRB
+            // 
+            this.minimumColRB.AutoSize = true;
+            this.minimumColRB.Location = new System.Drawing.Point(6, 42);
+            this.minimumColRB.Name = "minimumColRB";
+            this.minimumColRB.Size = new System.Drawing.Size(66, 17);
+            this.minimumColRB.TabIndex = 1;
+            this.minimumColRB.TabStop = true;
+            this.minimumColRB.Text = "Minimum";
+            this.minimumColRB.UseVisualStyleBackColor = true;
+            // 
+            // randomColCB
+            // 
+            this.randomColCB.AutoSize = true;
+            this.randomColCB.Checked = true;
+            this.randomColCB.Location = new System.Drawing.Point(6, 19);
+            this.randomColCB.Name = "randomColCB";
+            this.randomColCB.Size = new System.Drawing.Size(65, 17);
+            this.randomColCB.TabIndex = 0;
+            this.randomColCB.TabStop = true;
+            this.randomColCB.Text = "Random";
+            this.randomColCB.UseVisualStyleBackColor = true;
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.deleteEdit);
             this.groupBox1.Controls.Add(this.addEdit);
             this.groupBox1.Controls.Add(this.noneEdit);
-            this.groupBox1.Location = new System.Drawing.Point(32, 270);
+            this.groupBox1.Location = new System.Drawing.Point(32, 342);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(120, 90);
             this.groupBox1.TabIndex = 7;
@@ -127,7 +168,7 @@
             // 
             // reColourBtn
             // 
-            this.reColourBtn.Location = new System.Drawing.Point(32, 223);
+            this.reColourBtn.Location = new System.Drawing.Point(32, 170);
             this.reColourBtn.Name = "reColourBtn";
             this.reColourBtn.Size = new System.Drawing.Size(94, 23);
             this.reColourBtn.TabIndex = 6;
@@ -137,7 +178,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(32, 184);
+            this.saveButton.Location = new System.Drawing.Point(32, 209);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(94, 23);
             this.saveButton.TabIndex = 5;
@@ -204,6 +245,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
@@ -213,39 +255,41 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseClick);
             // 
-            // groupBox2
+            // exportWordBtn
             // 
-            this.groupBox2.Controls.Add(this.minimumColRB);
-            this.groupBox2.Controls.Add(this.randomColCB);
-            this.groupBox2.Location = new System.Drawing.Point(32, 366);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(120, 70);
-            this.groupBox2.TabIndex = 8;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Colours";
+            this.exportWordBtn.Location = new System.Drawing.Point(32, 249);
+            this.exportWordBtn.Name = "exportWordBtn";
+            this.exportWordBtn.Size = new System.Drawing.Size(94, 23);
+            this.exportWordBtn.TabIndex = 9;
+            this.exportWordBtn.Text = "Export To Word";
+            this.exportWordBtn.UseVisualStyleBackColor = true;
+            this.exportWordBtn.Click += new System.EventHandler(this.ExportWordBtn_Click);
             // 
-            // minimumColRB
+            // outlineOffset
             // 
-            this.minimumColRB.AutoSize = true;
-            this.minimumColRB.Location = new System.Drawing.Point(6, 42);
-            this.minimumColRB.Name = "minimumColRB";
-            this.minimumColRB.Size = new System.Drawing.Size(66, 17);
-            this.minimumColRB.TabIndex = 1;
-            this.minimumColRB.TabStop = true;
-            this.minimumColRB.Text = "Minimum";
-            this.minimumColRB.UseVisualStyleBackColor = true;
+            this.outlineOffset.Location = new System.Drawing.Point(32, 298);
+            this.outlineOffset.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.outlineOffset.Name = "outlineOffset";
+            this.outlineOffset.Size = new System.Drawing.Size(120, 20);
+            this.outlineOffset.TabIndex = 10;
+            this.outlineOffset.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
             // 
-            // randomColCB
+            // label1
             // 
-            this.randomColCB.AutoSize = true;
-            this.randomColCB.Checked = true;
-            this.randomColCB.Location = new System.Drawing.Point(6, 19);
-            this.randomColCB.Name = "randomColCB";
-            this.randomColCB.Size = new System.Drawing.Size(65, 17);
-            this.randomColCB.TabIndex = 0;
-            this.randomColCB.TabStop = true;
-            this.randomColCB.Text = "Random";
-            this.randomColCB.UseVisualStyleBackColor = true;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(29, 282);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(99, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Outline Pixel Offset:";
             // 
             // Form1
             // 
@@ -260,12 +304,13 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfPoints)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.outlineOffset)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -288,6 +333,9 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton minimumColRB;
         private System.Windows.Forms.RadioButton randomColCB;
+        private System.Windows.Forms.Button exportWordBtn;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown outlineOffset;
     }
 }
 
