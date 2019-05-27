@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Clipper, Version=6.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ParagonClipper.6.4.2\lib\netstandard2.0\Clipper.dll</HintPath>
+    <Reference Include="clipper_library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\com.angusj.Clipper.6.4.2\lib\net40\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc.1.50.5147\lib\net20\MigraDoc.DocumentObjectModel.dll</HintPath>

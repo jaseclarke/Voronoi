@@ -35,7 +35,7 @@ namespace RegionVoronoi
             Calculate();
         }
 
-        public void CreateDocument(string fileName)
+        public void CreateDocument(string fileName, bool fillShapes)
         {
             var doc = new Document();
 
@@ -43,11 +43,11 @@ namespace RegionVoronoi
 
             var mainImagePath = Path.Combine(TempFolder, "mainDiagram.png");
 
-            SavePictureAsImage(mainImagePath);
+            SavePictureAsImage(mainImagePath, fillShapes);
 
             var image = section.AddImage(mainImagePath);
 
-            foreach (var siteImagePath in CreateSiteImages())
+            foreach (var siteImagePath in CreateSiteImages(fillShapes))
             {
                 var siteImage = section.AddImage(siteImagePath);
             }
@@ -88,7 +88,7 @@ namespace RegionVoronoi
             }
         }
 
-        public void CreateSiteImage(string imageFileName, Site s)
+        public void CreateSiteImage(string imageFileName, Site s, bool fillShapes)
         {
             var imageSize = SiteImageSize(s, printedImageWidth, printedImageHeight);
 
@@ -96,31 +96,31 @@ namespace RegionVoronoi
             {
                 using (Graphics g = Graphics.FromImage(bm))
                 {
-                    DrawSitePicture(s, g, true, true, printedImageWidth, printedImageHeight);
+                    DrawSitePicture(s, g, fillShapes, true, printedImageWidth, printedImageHeight);
                     bm.Save(imageFileName, ImageFormat.Png);
                 }
             }
         }
 
-        private List<string> CreateSiteImages()
+        private List<string> CreateSiteImages(bool fillShapes)
         {
             List<string> pathList = new List<string>();
             for (int i = 0; i < Sites.Count; ++i)
             {
                 string siteImagePath = Path.Combine(TempFolder, $@"SitePicture{i + 1}.png");
                 pathList.Add(siteImagePath);
-                CreateSiteImage(siteImagePath, Sites[i]);
+                CreateSiteImage(siteImagePath, Sites[i], fillShapes);
             }
             return pathList;
         }
 
-        public void SavePictureAsImage(string fileName)
+        public void SavePictureAsImage(string fileName, bool fillShapes)
         {
             using (Bitmap bm = new Bitmap(printedImageWidth, printedImageHeight))
             {
                 using (Graphics g = Graphics.FromImage(bm))
                 {
-                    DrawPicture(g,true,true,false, printedImageWidth, printedImageHeight);
+                    DrawPicture(g,fillShapes,true,false, printedImageWidth, printedImageHeight);
                     bm.Save(fileName,ImageFormat.Png);
                 }
             }
@@ -143,39 +143,29 @@ namespace RegionVoronoi
 
             if (fillShapes)
             {
-
                 g.FillPolygon(new SolidBrush(site.Color), offsetPoints);
-
-                if (showOutlines)
-                {
-                    g.DrawPolygon(Pens.Black, offsetPoints);
-                }
-
-                if (showOutlines)
-                {
-                    ClipperOffset offset = new ClipperOffset();
-
-                    offset.AddPath(offsetPoints.Select(op => new IntPoint(op.X,op.Y)).ToList(),JoinType.jtMiter,EndType.etClosedLine);
-
-                    List<List<IntPoint>> solution = new List<List<IntPoint>>();
-                    offset.Execute(ref solution,ImageOffset);
-
-                    if (solution.Count > 0)
-                    {
-                        var offsetPoly = solution[0];
-                        g.DrawPolygon(Pens.Red, offsetPoly.Select(ip => new Point((int)ip.X, (int)ip.Y)).ToArray());
-                    }
-                }
             }
-            else
+
+            if (showOutlines)
             {
-                g.DrawPolygon(new Pen(site.Color), offsetPoints);
+                g.DrawPolygon(Pens.Black, offsetPoints);
             }
 
-            //if (showPoints)
-            //{
-            //    g.FillRectangle(Brushes.Blue, (float)(site.Position.X - 2.5), (float)(site.Position.Y - 2.5), 5, 5);
-            //}
+            if (showOutlines)
+            {
+                ClipperOffset offset = new ClipperOffset();
+
+                offset.AddPath(offsetPoints.Select(op => new IntPoint(op.X, op.Y)).ToList(), JoinType.jtMiter, EndType.etClosedLine);
+
+                List<List<IntPoint>> solution = new List<List<IntPoint>>();
+                offset.Execute(ref solution, ImageOffset);
+
+                if (solution.Count > 0)
+                {
+                    var offsetPoly = solution[0];
+                    g.DrawPolygon(Pens.Red, offsetPoly.Select(ip => new Point((int)ip.X, (int)ip.Y)).ToArray());
+                }
+            }
         }
 
 

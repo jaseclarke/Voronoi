@@ -182,7 +182,7 @@ namespace SimpleVoronoi
                 try
                 {
                     _voronoi.ImageOffset = (int) outlineOffset.Value;
-                    _voronoi.CreateDocument(sfd.FileName);
+                    _voronoi.CreateDocument(sfd.FileName, fillCB.Checked);
                     Process.Start(sfd.FileName);
                 }
                 catch (Exception exception)
